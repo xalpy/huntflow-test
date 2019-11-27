@@ -11,8 +11,8 @@ import requests
 from requests.models import Response
 
 
-def upload_file(name: str, path: str, headers: str) -> Response:
-	url = 'https://dev-100-api.huntflow.ru/account/2/upload'
+def upload_file(name: str, path: str, url_: str, headers: str) -> Response:
+	url = url_ + 'upload'
 	files = {'file': (f'{name}.pdf', open(f'{path}', 'rb'), 'application/pdf')}
 	req_resume = requests.post(url, headers=headers, files=files).json()
 	print(type(req_resume))
@@ -46,7 +46,7 @@ def create_body_to_req(last_name, first_name, middle_name, position, money,
 	return body
 
 
-def request_to_add_applicant(info_list: list, resume: dict, headers: dict) -> int:
+def request_to_add_applicant(info_list: list, resume: dict, url_: str, headers: dict) -> int:
 	name_info = str(info_list[1].value)
 	last_name = name_info.split()[0]
 	first_name = name_info.split()[1]
@@ -70,7 +70,7 @@ def request_to_add_applicant(info_list: list, resume: dict, headers: dict) -> in
 		month = None
 		year = None
 
-	url = 'https://dev-100-api.huntflow.ru/account/2/applicants'
+	url = url_ + 'applicants'
 
 	body = create_body_to_req(last_name, first_name, middle_name, position, money,
 						birth_day, month, year, photo, text, resume_id)
@@ -80,16 +80,16 @@ def request_to_add_applicant(info_list: list, resume: dict, headers: dict) -> in
 	
 
 
-def mark_request(list_: list, headers: dict) -> Response:
-	for i in list_:
-		body = {
-			"color": "d7b100",
-			"name": f"{i[-1]}"
-		}
-		req = requests.post('https://dev-100-api.huntflow.ru/account/2/applicants', 
-							json=body, headers=headers) 
+# def mark_request(list_: list, headers: dict) -> Response:
+# 	for i in list_:
+# 		body = {
+# 			"color": "d7b100",
+# 			"name": f"{i[-1]}"
+# 		}
+# 		req = requests.post('https://dev-100-api.huntflow.ru/account/2/applicants', 
+# 							json=body, headers=headers) 
 		
-		return req
+# 		return req
 		
 	
 
@@ -125,15 +125,16 @@ def main(path: str, token: str) -> str:
     	'Authorization': f'Bearer {token}',
 	    'X-File-Parse': 'true',
 	}
+	url = 'https://dev-100-api.huntflow.ru/account/2/'
 
 	infos = xlsx(path)
 	list_with_resume = [find_resume_files(path, i[0], i[1]) for i in infos]
 	for_itter = range(len(infos))
-	resumes_json = [upload_file(infos[i][1], list_with_resume[i], headers) for i in for_itter]
-	applicants_id = [request_to_add_applicant(infos[i], resumes_json[i], headers) for i in for_itter]
+	resumes_json = [upload_file(infos[i][1], list_with_resume[i], url, headers) for i in for_itter]
+	applicants_id = [request_to_add_applicant(infos[i], resumes_json[i], url, headers) for i in for_itter]
 	
 
-	mark_request(infos, headers)
+	#mark_request(infos, headers)
 	return 'Done'
 
 
