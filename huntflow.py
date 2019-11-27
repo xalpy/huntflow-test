@@ -11,11 +11,10 @@ import requests
 from requests.models import Response
 
 
-def upload_file(name: str, path: str, url_: str, headers: str) -> Response:
+def upload_file(name: str, path: str, url_: str, headers: str) -> dict:
 	url = url_ + 'upload'
 	files = {'file': (f'{name}.pdf', open(f'{path}', 'rb'), 'application/pdf')}
 	req_resume = requests.post(url, headers=headers, files=files).json()
-	print(type(req_resume))
 	return req_resume
 
 
