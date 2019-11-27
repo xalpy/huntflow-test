@@ -80,14 +80,11 @@ def request_to_add_applicant(info_list: list, resume: dict, url_: str, headers: 
 	
 
 
-# def mark_request(list_: list, headers: dict) -> Response:
+# def mark_request(list_: list, id_list: list, url_: str,headers: dict) -> Response:
+# 	req = requests.get(url_ + 'vacancies', headers=headers)
+	
 # 	for i in list_:
-# 		body = {
-# 			"color": "d7b100",
-# 			"name": f"{i[-1]}"
-# 		}
-# 		req = requests.post('https://dev-100-api.huntflow.ru/account/2/applicants', 
-# 							json=body, headers=headers) 
+# 		request = requests.get(url_ + 'applicants/' + )	 
 		
 # 		return req
 		
@@ -134,7 +131,7 @@ def main(path: str, token: str) -> str:
 	applicants_id = [request_to_add_applicant(infos[i], resumes_json[i], url, headers) for i in for_itter]
 	
 
-	#mark_request(infos, headers)
+	# mark_request(infos, headers)
 	return 'Done'
 
 
@@ -146,5 +143,7 @@ if __name__ == '__main__':
 			main(rf'{sys.argv[1]}', sys.argv[2])
 		except TypeError as e:
 			print(e)
+		except IndexError:
+			print('Отутствует один из аргументов или аргументы не переданы!!')
 	else:
 		print('Папки не существует')
