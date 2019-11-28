@@ -190,7 +190,7 @@ if __name__ == '__main__':
 		try:
 			main(rf'{sys.argv[1]}', token)
 		except TypeError as e:
-			print('tyt?')
+			print(e)
 		except IndexError:
 			print('Отутствует один из аргументов или аргументы не переданы!!')
 	else:
